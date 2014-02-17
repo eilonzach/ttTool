@@ -1,0 +1,59 @@
+README for the TTAC (Travel Time and Amplitude Calculator) 
+by Zach Eilon and Celia Eddy 
+Please contact zeilon@ldeo.columbia.edu or ceddy@ldeo.columbia.edu with questions/comments
+
+This is a short document to help record readers and other users predict seismic amplitudes and travel times.
+Individual scripts are also commented, and all the source code is available, so we encourage you to modify the source code and let us know what improvements you make!
+
+----------------------------------------------------------------------
+Step-by-step guide:
+----------------------------------------------------------------------
+Steps 1-6 must be executed on POVEL, and the your path must include the following:
+/home/chaos/ekstrom/binf95x/
+
+You should be in the ttcode root directory: you will see things like:
+MODEL 		(1D earth model file e.g. NOH2O)
+stations	(file with all stations to be used - e.g. USarray
+us_grid
+cagcrays_MOTHERSCRIPT*
+matlab_scripts/
+src/
+
+If any of these are missing, you need them and must find them before continuiung
+
+1) PICK AN EARTHQUAKE YOU LIKE	
+	- make sure it is in the global CMT catalogue: http://www.globalcmt.org/CMTsearch.html 
+	
+2) MAKE A DIRECTORY
+	- using >> mkdir dirname
+	- dirname convention should be datestring of earthquake: YYYYMMDDhhmm
+
+3) MAKE CMTSOLUTION
+	- within the earthquake directory, run QCMT [>> QCMT] and follow prompts
+
+4) CHOOSE PHASES
+	- in the root directory, create/edit a file called "phases" which contains names of all the phases with amplitudes you wish to calculate. Each phase name must be on its own line. Depth phases e.g. sP are possible. There is no need to specify diffracted phases - if you ask for P, the program will compute Pdiff in the P shadow zone automatically.
+	
+5) EDIT cagcrays_MOTHERSCRIPT
+	- enter event location: lat, lon, depth
+	- enter event datestring
+	- enter lat & lon of a reference point in the middle of your array - the program will calculate an amplitude-o-gram for this point, so you can look at relative amplitudes
+	
+6) RUN cagcrays_MOTHERSCRIPT
+	- you should see plenty of activity as it calculates raypaths for all phases, stations and gridpoints
+	- when it is done, check the event directory, it should now have plenty of path_grid_X and path_stat_X files
+
+Now switch over to matlab, either on povel or on your own machine.
+Make sure matlab_scripts/ and all of its subsidiary folders are on your matlab path.
+In order to make the maps, you will also need to have downloaded the (generally useful) m_map package, which you can find at http://www.eos.ubc.ca/~rich/map.html
+
+7) MOVE the "phases" file, the "CMTSOLUTION" file and all of the path files to an event directory your matlab can see
+    - if you downloaded the path files to your laptop, make sure to download the phases and CMTSOLUTION files too
+    - also make sure you have a copy of the earth model file
+
+7) EDIT ttampcalc_MOTHERSRCIPT
+	- it is particularly important that the paths to the event directory and model file are entered properly
+
+8) RUN ttampcalc_MOTHERSRCIPT
+	- you be asked to pick the phase to plot from the list
+    - use options at the top of this script to automatically create pdf files in the earthquake directory
