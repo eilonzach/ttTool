@@ -240,7 +240,7 @@ end
 % %% TEMP ADDITION
 % h3 = polar2(d2r(T1Hz(1).rays(1).rpath.gcd),T1Hz(1).rays(1).rpath.r,[0 Re],'r');
 % set(h3,'Linewidth',1.5)
-% %% END TEMO ADDITION
+% %% END TEMP ADDITION
 hold off
 h = gca;
 position = get(h,'Position');
