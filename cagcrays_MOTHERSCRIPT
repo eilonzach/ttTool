@@ -39,3 +39,5 @@ mv path path__1sta
 
 mv path_*_* $evtTstr
 rm fort.99
+
+cp phases $evtTstr

@@ -8,7 +8,7 @@ refsta = ''; % name of ref. station - to get s-grams - or ''
 
 %% files - make sure all these paths are correct
 modelfile = '/Users/Zach/Documents/MATLAB/TTamp_tool/NOH2O';
-evdir     = '/Users/Zach/Documents/MATLAB/TTamp_tool/201401200252/'; % remember a final forward slash!
+evdir     = '/Users/Zach/Documents/MATLAB/TTamp_tool/201305240544/'; % remember a final forward slash!
 CMTfile = strcat(evdir,'CMTSOLUTION');
 phasesfile =strcat(evdir,'phases');
 
