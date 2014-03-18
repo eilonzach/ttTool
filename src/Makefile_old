@@ -1,0 +1,138 @@
+FORTRAN = F95
+FFLAGS= $(FFLAG$(FORTRAN))
+GELIB= $(LIB$(FORTRAN))
+GEOBJ= $(OBJ$(FORTRAN))
+GEBIN= $(BIN$(FORTRAN))
+F.G95 = g95
+F.F95 = f95
+FORT= $(F.$(FORTRAN))
+#
+LFLAGS= -L$(GELIB) $(LFLAG)
+
+.f.o:
+	$(FORT) $(FFLAGS) -c $*.f
+
+.f.a:
+	$(FORT) -c $(FFLAGS) -c $<
+	ar rv $@ $*.o
+	rm -f $*.o
+
+all: 	wgtt_2 \
+	test_readem \
+	test_cagcrays 
+	
+#-----------------------------------------------------------------------
+
+wgtt_2: $(GEBIN)/wgtt_2
+	ls -l $(GEBIN)/wgtt_2
+	
+$(GEBIN)/wgtt_2: $(GEOBJ)/wgtt_2.o \
+	$(GELIB)/librays.a
+	$(FORT) $(FFLAGS) $(LFLAGS) -o $(GEBIN)/wgtt_2 \
+	$(GEOBJ)/wgtt_2.o \
+	 -lrays -lgeo -lgio
+
+$(GEOBJ)/wgtt_2.o: wgtt_2.f
+	$(FORT) $(FFLAGS) -c -o $(GEOBJ)/wgtt_2.o wgtt_2.f
+	
+#-----------------------------------------------------------------------
+
+test_readem: $(GEBIN)/test_readem
+	ls -l $(GEBIN)/test_readem
+	
+$(GEBIN)/test_readem: $(GEOBJ)/test_readem.o \
+	$(GELIB)/librays.a
+	$(FORT) $(FFLAGS) $(LFLAGS) -o $(GEBIN)/test_readem \
+	$(GEOBJ)/test_readem.o \
+	$(GELIB)/librays.a \
+	 -lgeo -lgio
+
+$(GEOBJ)/test_readem.o: test_readem.f
+	$(FORT) $(FFLAGS) -c -o $(GEOBJ)/test_readem.o test_readem.f
+
+#-----------------------------------------------------------------------
+
+test_cagcrays: $(GEBIN)/test_cagcrays \
+	$(GELIB)/librays.a
+	ls -l $(GEBIN)/test_cagcrays
+	
+$(GEBIN)/test_cagcrays: $(GEOBJ)/test_cagcrays.o \
+	$(GELIB)/librays.a
+	$(FORT) $(FFLAGS) $(LFLAGS) -o $(GEBIN)/test_cagcrays \
+	$(GEOBJ)/test_cagcrays.o \
+        -lrays -lge -lgeo -lgio
+	
+$(GEOBJ)/test_cagcrays.o: test_cagcrays.f
+	$(FORT) $(FFLAGS) -c -o $(GEOBJ)/test_cagcrays.o test_cagcrays.f
+	
+#-----------------------------------------------------------------------
+
+test_cagcrays_arr: $(GEBIN)/test_cagcrays_arr \
+	$(GELIB)/librays.a
+	ls -l $(GEBIN)/test_cagcrays_arr
+	
+$(GEBIN)/test_cagcrays_arr: $(GEOBJ)/test_cagcrays_arr.o \
+	$(GELIB)/librays.a
+	$(FORT) $(FFLAGS) $(LFLAGS) -o $(GEBIN)/test_cagcrays_arr \
+	$(GEOBJ)/test_cagcrays_arr.o \
+	$(GELIB)/librays.a \
+	-lrays -lge -lgeo -lgio
+	
+$(GEOBJ)/test_cagcrays_arr.o: test_cagcrays_arr.f
+	$(FORT) $(FFLAGS) -c -o $(GEOBJ)/test_cagcrays_arr.o \
+	test_cagcrays_arr.f
+
+#-----------------------------------------------------------------------
+
+ttcurves: $(MYBIN)/ttcurves \
+	$(GELIB)/librays.a
+	ls -l $(MYBIN)/ttcurves
+	
+$(MYBIN)/ttcurves: $(MYOBJ)/ttcurves.o \
+	$(GELIB)/librays.a
+	f77 $(FFLAGS) $(LFLAGS) -o $(MYBIN)/ttcurves \
+	$(MYOBJ)/ttcurves.o \
+	$(GELIB)/librays.a \
+	 -lge -lxlm -lgeo -lio
+#	-lrays -lge -lxlm -lgeo -lio
+	
+$(MYOBJ)/ttcurves.o: ttcurves.f
+	f77 $(FFLAGS) -c -o $(MYOBJ)/ttcurves.o ttcurves.f
+
+#------------------------------------------------------------------------------
+
+LIB=librays
+
+$(GELIB)/$(LIB).a: \
+	$(GELIB)/$(LIB).a(readem.o) \
+	$(GELIB)/$(LIB).a(wgray.o) \
+	$(GELIB)/$(LIB).a(evem.o) \
+	$(GELIB)/$(LIB).a(evemell.o) \
+	$(GELIB)/$(LIB).a(evemdr.o) \
+	$(GELIB)/$(LIB).a(qtau.o) \
+	$(GELIB)/$(LIB).a(qtauall.o) \
+	$(GELIB)/$(LIB).a(qtauzero.o) \
+	$(GELIB)/$(LIB).a(fqs.o) \
+	$(GELIB)/$(LIB).a(dxt.o) \
+	$(GELIB)/$(LIB).a(wgint.o) \
+	$(GELIB)/$(LIB).a(drspledr.o) \
+	$(GELIB)/$(LIB).a(writeemfl.o) \
+	$(GELIB)/$(LIB).a(cagcrays.o) \
+	$(GELIB)/$(LIB).a(psvrayin.o) \
+	$(GELIB)/$(LIB).a(readptab.o) \
+	$(GELIB)/$(LIB).a(prange.o) \
+	$(GELIB)/$(LIB).a(getptab.o) \
+	$(GELIB)/$(LIB).a(fdrays.o) \
+	$(GELIB)/$(LIB).a(rayseq.o) \
+	$(GELIB)/$(LIB).a(reademfl.o)
+	ranlib $(GELIB)/$(LIB).a
+        
+$(GELIB)/$(LIB).a(evem.o): emcommon.h
+$(GELIB)/$(LIB).a(evemdr.o): emcommon.h
+$(GELIB)/$(LIB).a(evemell.o): emcommon.h
+$(GELIB)/$(LIB).a(getptab.o): rays.h
+$(GELIB)/$(LIB).a(readem.o): emcommon.h
+$(GELIB)/$(LIB).a(reademfl.o): emcommon.h
+$(GELIB)/$(LIB).a(readptab.o): rays.h
+$(GELIB)/$(LIB).a(writeemfl.o): emcommon.h
+

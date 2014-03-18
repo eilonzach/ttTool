@@ -1,0 +1,41 @@
+#!/bin/csh
+### REQUIRED INPUTS ###
+set evtTstr = 201305240544
+set elat =   54.6100
+set elon =  153.7700
+set edep =  610.9500
+set slat =   40.0
+set slon =  -78.0
+
+##########################################################################################
+### NO NEED TO CHANGE BELOW HERE ###
+##########################################################################################
+
+foreach phase (`cat phases`)
+
+echo $phase
+./src/test_cagcrays_stations_pathfile << ! 
+$phase
+$elat $elon $edep
+!
+
+./src/test_cagcrays_grid_pathfile << ! 
+$phase
+$elat $elon $edep
+!
+
+mv path path_stat_$phase
+mv path_grid path_grid_$phase	
+
+
+end
+
+./src/test_cagcrays_phases << !
+$elat $elon $edep
+$slat $slon
+!
+
+mv path path__1sta
+
+mv path_*_* $evtTstr
+rm fort.99
